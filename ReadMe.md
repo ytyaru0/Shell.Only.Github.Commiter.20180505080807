@@ -45,6 +45,8 @@ Username,MailAddress,,AccessToken
 
 ## 実行
 
+### リポジトリ作成 / コミット
+
 ```sh
 $ push
 ```
@@ -123,6 +125,20 @@ To https://{user}:{token}@github.com/{user}/{repo}.git
 なお、URLにパスワードやトークンを設定するのは、pushする度に求められるそれらの入力を省くためである。
 
 SSH通信であればURLにパスワードやトークンを設定せずとも入力を省略できるが、ここでは実装を簡略化するためHTTPS通信に限定する。
+
+# 未実装だが欲しい機能
+
+## リポジトリ削除
+
+* ローカルリポジトリ(`.git`ディレクトリ)を削除する
+* リモートリポジトリを削除する(WebAPIにより)
+    * AccessTokenを使うなら`delete_repo`のscopeが必要
+
+```sh
+$ push -d
+```
+
+削除対象のユーザ名とリポジトリ名は、`.git/config`から取得する。
 
 # 開発環境
 
