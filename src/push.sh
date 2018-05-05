@@ -44,18 +44,6 @@ GetPassMail () {
     [ -z "$password" ] && { echo "パスワードが見つかりませんでした。DBを確認してください。"; exit 1; }
     [ -z "$mailaddr" ] && { echo "メールアドレスが見つかりませんでした。DBを確認してください。"; exit 1; }
 }
-OverwriteConfig () {
-    local before="	url = https://github.com/"
-    if [ "$token" == "" ]; then
-        local after="	url = https://${username}:${password}@github.com/"
-    else
-        local after="	url = https://${username}:${token}@github.com/"
-    fi
-    local config=".git/config"
-    cp "$config" "$config.BAK"
-    sed -e "s%$before%$after%" "$config.BAK" > "$config"
-    rm "$config.BAK"
-}
 CreateRepository () {
     if [ ! -d ".git" ]; then
         echo "リポジトリを作成しますか？ (y/n)"
@@ -74,18 +62,8 @@ CreateRemoteRepository () {
     [ "$token" == "" ] && local secret="${password}"
     [ "$token" != "" ] && local secret="${token}"
     local curl_user="${username}:${secret}"
-    #[ "$token" == "" ] && local curl_user="${username}:${password}"
-    #[ "$token" != "" ] && local curl_user="${username}:${token}"
     curl -u "$curl_user" -H "Time-Zone: Asia/Tokyo" https://api.github.com/user/repos -d "${json}"
     git remote add origin https://${username}:${secret}@github.com/${username}/${repo_name}.git
-    #if [ "$token" == "" ]; then
-    #    curl -u "${username}:${password}" -H "Time-Zone: Asia/Tokyo" https://api.github.com/user/repos -d "${json}"
-    #    git remote add origin https://${username}:${password}@github.com/${username}/${repo_name}.git
-    #    OverwriteConfig
-    #else
-    #    curl -u "$username:$token" -H "Time-Zone: Asia/Tokyo"  https://api.github.com/user/repos -d "${json}"
-    #    git remote add origin https://${username}:${token}@github.com/${username}/${repo_name}.git
-    #fi
 }
 CheckView () {
     git status -s
@@ -99,7 +77,6 @@ AddCommitPush () {
     if [ -n "$answer" ]; then
         git add .
         git commit -m "$answer"
-        #OverwriteConfig
         # stderrにパスワード付URLが見えてしまうので隠す
         git push origin master 2>&1 | grep -v http
     fi
