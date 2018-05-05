@@ -1,12 +1,10 @@
 #!/bin/bash
 # Accounts.csv
-# ユーザ入力値
-#   Username,Email,Password[,TwoFactorSecret]
-# 変換後
-#   Username,Email,'*'[,TwoFactorSecret],AccessToken
+#   Username,Email,Password[,AccessToken]
 GetPathAccounts() {
     PATH_DIR_THIS=$(cd $(dirname $0); pwd)
-    PATH_ACCOUNTS="${PATH_DIR_THIS%/}/Accounts.csv"
+    #PATH_ACCOUNTS="${PATH_DIR_THIS%/}/Accounts.csv"
+    PATH_ACCOUNTS="$HOME/root/db/account/github/Accounts.csv"
     echo ${PATH_ACCOUNTS}
 }
 ReadUsers() {
